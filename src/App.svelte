@@ -25,13 +25,14 @@ let items = [
 
 function OnSwipe (item) {
   // items = items.filter(i => i != item)
-
-  items = items.map(i => {
-    if(item === i){
-      item.need = false
-    }
-    return i
-  })
+  setTimeout(() => {
+    items = items.map(i => {
+      if(item === i){
+        item.need = false
+      }
+      return i
+    })
+  }, 120)
 }
 
 </script>
