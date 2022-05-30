@@ -1,13 +1,32 @@
 import { Button, Modal, Switch } from '@mantine/core';
-import { json, LoaderFunction } from '@remix-run/node';
+import { ErrorBoundaryComponent, json, LoaderFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import { itemsAtom, shoppingListAtom, shoppingListToggleAtom } from '~/atoms';
 import Item from '~/components/Item';
 import { ItemInfo } from '~/types';
+import { collection, getDocs, getFirestore } from 'firebase/firestore';
 
-export const loader: LoaderFunction = () => {
+import { initializeApp } from 'firebase/app';
+
+const firebaseConfig = {
+  apiKey: 'AIzaSyDra5wmP5z3ijYTq5FP2jlz8V-SHrqA7VM',
+  authDomain: 'groceries-christianpayne.firebaseapp.com',
+  projectId: 'groceries-christianpayne',
+  storageBucket: 'groceries-christianpayne.appspot.com',
+  messagingSenderId: '186982361770',
+  appId: '1:186982361770:web:ae1b9f260bd75678c77ed3',
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+export const loader: LoaderFunction = async () => {
+  // const groceriesCol = collection(db, 'groceries');
+  // const groceriesSnapshot = await getDocs(groceriesCol)
+  // const items = groceriesSnapshot.docs.map((doc) => doc.data());
+
   const items: Array<ItemInfo> = [
     {
       id: '1',
@@ -48,7 +67,7 @@ export default function MyApp() {
   }
 
   useEffect(() => {
-    // setItems(data);
+    setItems(data);
   }, [data]);
 
   return (
@@ -83,3 +102,7 @@ export default function MyApp() {
     </div>
   );
 }
+
+export const errorBoundary: ErrorBoundaryComponent = () => {
+  return <> ERROR HELP!</>;
+};
