@@ -15,6 +15,7 @@
   "dependencies": {
     "@mantine/core": "^4.2.7",
     "@mantine/hooks": "^4.2.7",
+    "@mantine/modals": "^4.2.7",
     "@mantine/notifications": "^4.2.7",
     "@mantine/ssr": "^4.2.7",
     "@netlify/functions": "^1.0.0",
