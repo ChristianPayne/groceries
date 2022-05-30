@@ -4,7 +4,7 @@ node_modules
 /netlify/functions/server/index.js
 /public/build
 /.netlify
-/app/styles/app.css
+/app/tailwind.css
 serviceAccountKey.json
 .env
 /app/database/config/config.json
