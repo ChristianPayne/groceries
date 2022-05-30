@@ -1,4 +1,4 @@
-import { Button, Switch } from '@mantine/core';
+import { Button, Modal, Switch } from '@mantine/core';
 import { json, LoaderFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { useAtom } from 'jotai';
@@ -70,11 +70,11 @@ export default function MyApp() {
       </div>
 
       <div className="space-y-4 w-full lg:w-1/2">
-        {getItems().length > 0 ? (
-          getItems().map((item, i) => (
-            <Item key={i} item={item} updateItem={updateItem} />
-          ))
-        ) : (
+        {getItems().map((item, i) => (
+          <Item key={i} item={item} updateItem={updateItem} />
+        ))}
+
+        {getItems().length === 0 && shoppingListToggle && (
           <div className="text-center text-xl">
             Looks like you got everything!
           </div>
