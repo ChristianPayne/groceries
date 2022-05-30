@@ -36,8 +36,6 @@
   on:reachEnd={e => onEnd()}
   on:slideChangeTransitionEnd={e => onTransitionEnd()}
   >
-    <!-- <SwiperSlide></SwiperSlide> -->
-
     <SwiperSlide class="flex bg-green-900 rounded-xl text-white justify-center items-center">
       <div>
         <p>{item.name}</p>

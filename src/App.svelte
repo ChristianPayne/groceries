@@ -4,6 +4,20 @@ import { Swiper, SwiperSlide } from "swiper/svelte";
 import Page from "./Page.svelte";
 import type {Item} from './types';
 
+let swiper;
+function init (_swiper) {
+  swiper = _swiper.detail[0];
+}
+
+function changePage(page: number) {
+  if(swiper === undefined) return;
+  if(page === 0) {
+    swiper.slidePrev()
+  } else {
+    swiper.slideNext()
+  }
+}
+
 let items: Item[] = [
   {
     name:"Kale",
@@ -13,7 +27,7 @@ let items: Item[] = [
   {
     name:"Broccoli",
     quantity: 1,
-    need: true
+    need: false
   },
   {
     name:"Bread",
@@ -39,19 +53,19 @@ function filterNeeded (needed: boolean) {
   }
 }
 
-let swiper;
-function init (_swiper) {
-  swiper = _swiper.detail[0];
+function onSwipe (item) {
+  // items = items.filter(i => i != item)
+  setTimeout(() => {
+    items = items.map(i => {
+      if(item === i){
+        i.need = false
+      }
+      return i
+    })
+  }, 120)
 }
 
-function changePage(page: number) {
-  if(swiper === undefined) return;
-  if(page === 0) {
-    swiper.slidePrev()
-  } else {
-    swiper.slideNext()
-  }
-}
+
 
 </script>
 
@@ -70,11 +84,11 @@ function changePage(page: number) {
     on:swiper={s => init(s)}
     >
       <SwiperSlide class="">
-        <Page items={filterNeeded(true)} direction="right"/>
+        <Page items={items} onSwipe={onSwipe} direction="right"/>
       </SwiperSlide>
       
       <SwiperSlide class="">
-        <Page items={filterNeeded(true)} direction="left"/>
+        <Page items={items} onSwipe={onSwipe} direction="left"/>
       </SwiperSlide>
     </Swiper>
   </div>
