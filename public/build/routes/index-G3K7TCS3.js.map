@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["browser-route-module:/Users/christianpayne/Documents/Personal/groceries/app/routes/index.tsx?browser", "../../../app/routes/index.tsx"],
+  "sourcesContent": ["export { default } from \"/Users/christianpayne/Documents/Personal/groceries/app/routes/index.tsx\";", "export default function Index() {\n  return (\n    <div style={{ fontFamily: \"system-ui, sans-serif\", lineHeight: \"1.4\" }}>\n      <h1>Welcome to Remix</h1>\n      <ul>\n        <li>\n          <a\n            target=\"_blank\"\n            href=\"https://remix.run/tutorials/blog\"\n            rel=\"noreferrer\"\n          >\n            15m Quickstart Blog Tutorial\n          </a>\n        </li>\n        <li>\n          <a\n            target=\"_blank\"\n            href=\"https://remix.run/tutorials/jokes\"\n            rel=\"noreferrer\"\n          >\n            Deep Dive Jokes App Tutorial\n          </a>\n        </li>\n        <li>\n          <a target=\"_blank\" href=\"https://remix.run/docs\" rel=\"noreferrer\">\n            Remix Docs\n          </a>\n        </li>\n      </ul>\n    </div>\n  );\n}\n"],
+  "mappings": "4DAAA,ICAA,IAAe,YAAiB,CAC9B,MACE,iBAAC,MAAD,CAAK,MAAO,CAAE,WAAY,wBAAyB,WAAY,QAC7D,gBAAC,KAAD,KAAI,oBACJ,gBAAC,KAAD,KACE,gBAAC,KAAD,KACE,gBAAC,IAAD,CACE,OAAO,SACP,KAAK,mCACL,IAAI,cACL,iCAIH,gBAAC,KAAD,KACE,gBAAC,IAAD,CACE,OAAO,SACP,KAAK,oCACL,IAAI,cACL,iCAIH,gBAAC,KAAD,KACE,gBAAC,IAAD,CAAG,OAAO,SAAS,KAAK,yBAAyB,IAAI,cAAa",
+  "names": []
+}

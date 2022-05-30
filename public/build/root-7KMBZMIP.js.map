@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["browser-route-module:/Users/christianpayne/Documents/Personal/groceries/app/root.tsx?browser", "../../app/root.tsx"],
+  "sourcesContent": ["export { default, meta } from \"/Users/christianpayne/Documents/Personal/groceries/app/root.tsx\";", "import type { MetaFunction } from \"@remix-run/node\";\nimport {\n  Links,\n  LiveReload,\n  Meta,\n  Outlet,\n  Scripts,\n  ScrollRestoration,\n} from \"@remix-run/react\";\n\nexport const meta: MetaFunction = () => ({\n  charset: \"utf-8\",\n  title: \"New Remix App\",\n  viewport: \"width=device-width,initial-scale=1\",\n});\n\nexport default function App() {\n  return (\n    <html lang=\"en\">\n      <head>\n        <Meta />\n        <Links />\n      </head>\n      <body>\n        <Outlet />\n        <ScrollRestoration />\n        <Scripts />\n        <LiveReload />\n      </body>\n    </html>\n  );\n}\n"],
+  "mappings": "oJAAA,ICAA,IAUO,GAAM,GAAqB,IAAO,EACvC,QAAS,QACT,MAAO,gBACP,SAAU,uCAGG,YAAe,CAC5B,MACE,iBAAC,OAAD,CAAM,KAAK,MACT,gBAAC,OAAD,KACE,gBAAC,EAAD,MACA,gBAAC,EAAD,OAEF,gBAAC,OAAD,KACE,gBAAC,EAAD,MACA,gBAAC,EAAD,MACA,gBAAC,EAAD,MACA,gBAAC,EAAD",
+  "names": []
+}
