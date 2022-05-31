@@ -8,3 +8,4 @@ node_modules
 serviceAccountKey.json
 .env
 /app/database/config/config.json
+/public
