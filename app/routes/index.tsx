@@ -1,14 +1,22 @@
-import { Button, Modal, Switch } from '@mantine/core';
 import { ErrorBoundaryComponent, json, LoaderFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
+import { Button, Modal, Switch, TextInput } from '@mantine/core';
+import { useAtom } from 'jotai';
 import { itemsAtom, shoppingListAtom, shoppingListToggleAtom } from '~/atoms';
 import Item from '~/components/Item';
 import { ItemInfo } from '~/types';
-import { collection, getDocs, getFirestore } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  getFirestore,
+  onSnapshot,
+} from 'firebase/firestore';
 
 import { initializeApp } from 'firebase/app';
+import AddItem from '~/components/AddItem';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDra5wmP5z3ijYTq5FP2jlz8V-SHrqA7VM',
@@ -22,26 +30,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-export const loader: LoaderFunction = async () => {
-  // const groceriesCol = collection(db, 'groceries');
-  // const groceriesSnapshot = await getDocs(groceriesCol)
-  // const items = groceriesSnapshot.docs.map((doc) => doc.data());
+const groceriesCol = doc(db, 'groceries/items');
 
-  const items: Array<ItemInfo> = [
-    {
-      id: '1',
-      itemName: 'Kale pls',
-      need: true,
-      quantity: 2,
-    },
-    {
-      id: '2',
-      itemName: 'Peanuts pls',
-      need: false,
-      quantity: 2,
-    },
-  ];
-  return json(items);
+export const loader: LoaderFunction = async () => {
+  const groceriesSnapshot = await getDoc(groceriesCol);
+  const items = groceriesSnapshot.data()?.items;
+
+  return json(items ?? []);
 };
 
 export default function MyApp() {
@@ -51,6 +46,14 @@ export default function MyApp() {
   const [shoppingListToggle, setShoppingListToggle] = useAtom(
     shoppingListToggleAtom
   );
+  const [addItemModal, setAddItemModal] = useState(false);
+
+  useEffect(() => {
+    const unsub = onSnapshot(groceriesCol, (doc) => {
+      console.log('Current data: ', doc.data());
+    });
+    return unsub;
+  }, []);
 
   function getItems() {
     return shoppingListToggle ? shoppingList : items;
@@ -64,6 +67,10 @@ export default function MyApp() {
       return i;
     });
     setItems(newItems);
+  }
+
+  function addItem(item: ItemInfo) {
+    // Send it!
   }
 
   useEffect(() => {
@@ -99,6 +106,28 @@ export default function MyApp() {
           </div>
         )}
       </div>
+      <Modal
+        opened={addItemModal}
+        onClose={() => {
+          setAddItemModal(false);
+        }}
+        title="Add Item"
+      >
+        <AddItem
+          addItem={(newItem: ItemInfo) => {
+            console.log('This is a log from index', newItem);
+          }}
+        />
+      </Modal>
+      <Button
+        className="m-4"
+        color="cyan"
+        onClick={() => {
+          setAddItemModal(true);
+        }}
+      >
+        Add Item
+      </Button>
     </div>
   );
 }
