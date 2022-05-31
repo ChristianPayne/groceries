@@ -6,8 +6,11 @@ import {
   Checkbox,
   NumberInput,
   Textarea,
+  TextInput,
 } from '@mantine/core';
 import { useState } from 'react';
+import { useAtom } from 'jotai';
+import { lastActionAtom } from '~/atoms';
 
 type Props = {
   item: ItemInfo;
@@ -17,6 +20,7 @@ type Props = {
 
 export default function Item({ item, updateItem, deleteItem }: Props) {
   const [opened, setOpened] = useState(false);
+  const [lastAction, setLastAction] = useAtom(lastActionAtom);
 
   function Update(item: ItemInfo) {
     updateItem(item);
@@ -28,15 +32,29 @@ export default function Item({ item, updateItem, deleteItem }: Props) {
         opened={opened}
         size="100%"
         onClose={() => setOpened(false)}
-        title={item.itemName}
+        title="🥖"
         className="w-full"
       >
         <div className="space-y-4">
+          <TextInput
+            variant="headless"
+            className="text-3xl text-black w-full"
+            styles={{ input: { width: '100%', boxSizing: 'border-box' } }}
+            value={item.itemName}
+            onChange={(event) => {
+              item.itemName = event.currentTarget.value;
+              Update(item);
+            }}
+          />
           <Checkbox
             label="Item Needed"
             color="cyan"
             checked={item.need}
             onChange={(event) => {
+              setLastAction({
+                type: 'check',
+                item: JSON.parse(JSON.stringify(item)),
+              });
               item.need = event.currentTarget.checked;
               Update(item);
             }}
@@ -83,6 +101,10 @@ export default function Item({ item, updateItem, deleteItem }: Props) {
           color="cyan"
           checked={item.need}
           onChange={(event) => {
+            setLastAction({
+              type: 'check',
+              item: JSON.parse(JSON.stringify(item)),
+            });
             item.need = event.currentTarget.checked;
             Update(item);
           }}

@@ -3,9 +3,14 @@ import { useLoaderData } from '@remix-run/react';
 import { useEffect, useState } from 'react';
 import { Button, Modal, Switch, TextInput } from '@mantine/core';
 import { useAtom } from 'jotai';
-import { itemsAtom, shoppingListAtom, shoppingListToggleAtom } from '~/atoms';
+import {
+  itemsAtom,
+  lastActionAtom,
+  shoppingListAtom,
+  shoppingListToggleAtom,
+} from '~/atoms';
 import Item from '~/components/Item';
-import { ItemInfo } from '~/types';
+import { ItemInfo, UndoAction } from '~/types';
 import {
   collection,
   doc,
@@ -18,6 +23,7 @@ import {
 
 import { initializeApp } from 'firebase/app';
 import AddItem from '~/components/AddItem';
+import { showNotification } from '@mantine/notifications';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDra5wmP5z3ijYTq5FP2jlz8V-SHrqA7VM',
@@ -40,10 +46,11 @@ export default function MyApp() {
     shoppingListToggleAtom
   );
   const [addItemModal, setAddItemModal] = useState(false);
+  const [lastAction, setLastAction] = useAtom(lastActionAtom);
 
   useEffect(() => {
     const unsub = onSnapshot(groceriesRef, (doc) => {
-      console.log('Current data: ', doc.data());
+      // console.log('Current data: ', doc.data());
       setItems(doc.data()?.items ?? []);
     });
     return unsub;
@@ -51,6 +58,25 @@ export default function MyApp() {
 
   function getItems() {
     return shoppingListToggle ? shoppingList : items;
+  }
+
+  function undoAction() {
+    switch (lastAction?.type) {
+      case 'check':
+        updateItem(lastAction.item);
+        setLastAction(null);
+        break;
+      case 'delete':
+        addItem(lastAction.item);
+        setLastAction(null);
+        break;
+      default:
+        console.log('Action not found!', lastAction);
+    }
+  }
+
+  function updateLastAction(action: UndoAction) {
+    setLastAction(action);
   }
 
   function updateItem(item: ItemInfo) {
@@ -68,12 +94,18 @@ export default function MyApp() {
     let newItems = [...items, item];
     setItems(newItems);
     updateDoc(groceriesRef, { items: newItems });
+    showNotification({
+      message: `${item.itemName} added to shopping list.`,
+    });
   }
 
   function deleteItem(item: ItemInfo) {
     let newItems = items.filter((i) => i.id !== item.id);
     setItems(newItems);
     updateDoc(groceriesRef, { items: newItems });
+    showNotification({
+      message: `${item.itemName} deleted from shopping list.`,
+    });
   }
 
   return (
@@ -117,7 +149,12 @@ export default function MyApp() {
         }}
         title="Add Item"
       >
-        <AddItem addItem={addItem} closeModal={() => setAddItemModal(false)} />
+        <AddItem
+          addItem={addItem}
+          closeModal={() => {
+            setAddItemModal(false);
+          }}
+        />
       </Modal>
       <Button
         className="m-4"

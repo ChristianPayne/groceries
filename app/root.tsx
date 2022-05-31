@@ -1,3 +1,4 @@
+import { NotificationsProvider } from '@mantine/notifications';
 import type { LinksFunction, MetaFunction } from '@remix-run/node';
 import {
   Links,
@@ -25,7 +26,9 @@ export default function App() {
         <Links />
       </head>
       <body className="bg-neutral-800 text-white p-4">
-        <Outlet />
+        <NotificationsProvider>
+          <Outlet />
+        </NotificationsProvider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

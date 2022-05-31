@@ -5,6 +5,7 @@ import {
   Textarea,
   TextInput,
 } from '@mantine/core';
+import { showNotification } from '@mantine/notifications';
 import { customAlphabet } from 'nanoid';
 import { ItemInfo } from '~/types';
 const nanoid = customAlphabet('1234567890abcdef', 10);

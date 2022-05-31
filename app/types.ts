@@ -5,3 +5,8 @@ export type ItemInfo = {
   quantity?: number;
   note?: string;
 };
+
+export type UndoAction = {
+  type: 'delete' | 'check';
+  item: ItemInfo;
+};
