@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["browser-route-module:/Users/christianpayne/Documents/Personal/groceries/app/routes/index.tsx?browser"],
-  "sourcesContent": ["module.exports = {};"],
-  "mappings": "4DAAA,sBAAO,QAAU",
-  "names": []
-}
