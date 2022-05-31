@@ -46,7 +46,6 @@ export default function AddItem(props: Props) {
       <Checkbox
         label="Item Needed"
         color="cyan"
-        checked={newItem.need}
         onChange={(event) => {
           newItem.need = event.currentTarget.checked;
         }}

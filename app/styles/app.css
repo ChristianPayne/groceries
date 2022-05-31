@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  * {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  }
+}
