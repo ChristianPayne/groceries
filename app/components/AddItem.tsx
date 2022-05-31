@@ -1,10 +1,17 @@
-import { Button, Checkbox, NumberInput, TextInput } from '@mantine/core';
+import {
+  Button,
+  Checkbox,
+  NumberInput,
+  Textarea,
+  TextInput,
+} from '@mantine/core';
 import { customAlphabet } from 'nanoid';
 import { ItemInfo } from '~/types';
 const nanoid = customAlphabet('1234567890abcdef', 10);
 
 type Props = {
   addItem: Function;
+  closeModal: Function;
 };
 
 export default function AddItem(props: Props) {
@@ -19,7 +26,7 @@ export default function AddItem(props: Props) {
       <TextInput
         label="Item Name"
         description="What do you need to get?"
-        value={newItem.itemName}
+        placeholder={newItem.itemName}
         onChange={(event) => {
           newItem.itemName = event.currentTarget.value;
         }}
@@ -43,12 +50,20 @@ export default function AddItem(props: Props) {
           newItem.need = event.currentTarget.checked;
         }}
       />
+      <Textarea
+        placeholder="Add a note..."
+        label="Note"
+        onChange={(event) => {
+          newItem.note = event.currentTarget.value;
+        }}
+      />
       <Button
         variant="light"
         color="cyan"
         onClick={() => {
           console.log('Added item', newItem);
           props.addItem(newItem);
+          props.closeModal();
         }}
       >
         Add Item

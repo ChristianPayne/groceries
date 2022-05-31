@@ -13,6 +13,7 @@ import {
   getDocs,
   getFirestore,
   onSnapshot,
+  updateDoc,
 } from 'firebase/firestore';
 
 import { initializeApp } from 'firebase/app';
@@ -30,17 +31,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const groceriesCol = doc(db, 'groceries/items');
-
-export const loader: LoaderFunction = async () => {
-  const groceriesSnapshot = await getDoc(groceriesCol);
-  const items = groceriesSnapshot.data()?.items;
-
-  return json(items ?? []);
-};
+const groceriesRef = doc(db, 'groceries/items');
 
 export default function MyApp() {
-  const data = useLoaderData();
   const [items, setItems] = useAtom(itemsAtom);
   const [shoppingList] = useAtom(shoppingListAtom);
   const [shoppingListToggle, setShoppingListToggle] = useAtom(
@@ -49,8 +42,9 @@ export default function MyApp() {
   const [addItemModal, setAddItemModal] = useState(false);
 
   useEffect(() => {
-    const unsub = onSnapshot(groceriesCol, (doc) => {
+    const unsub = onSnapshot(groceriesRef, (doc) => {
       console.log('Current data: ', doc.data());
+      setItems(doc.data()?.items ?? []);
     });
     return unsub;
   }, []);
@@ -67,15 +61,20 @@ export default function MyApp() {
       return i;
     });
     setItems(newItems);
+    updateDoc(groceriesRef, { items: newItems });
   }
 
   function addItem(item: ItemInfo) {
-    // Send it!
+    let newItems = [...items, item];
+    setItems(newItems);
+    updateDoc(groceriesRef, { items: newItems });
   }
 
-  useEffect(() => {
-    setItems(data);
-  }, [data]);
+  function deleteItem(item: ItemInfo) {
+    let newItems = items.filter((i) => i.id !== item.id);
+    setItems(newItems);
+    updateDoc(groceriesRef, { items: newItems });
+  }
 
   return (
     <div className="flex flex-col w-full items-center">
@@ -97,7 +96,12 @@ export default function MyApp() {
 
       <div className="space-y-4 w-full lg:w-1/2">
         {getItems().map((item, i) => (
-          <Item key={i} item={item} updateItem={updateItem} />
+          <Item
+            key={i}
+            item={item}
+            updateItem={updateItem}
+            deleteItem={deleteItem}
+          />
         ))}
 
         {getItems().length === 0 && shoppingListToggle && (
@@ -113,11 +117,7 @@ export default function MyApp() {
         }}
         title="Add Item"
       >
-        <AddItem
-          addItem={(newItem: ItemInfo) => {
-            console.log('This is a log from index', newItem);
-          }}
-        />
+        <AddItem addItem={addItem} closeModal={() => setAddItemModal(false)} />
       </Modal>
       <Button
         className="m-4"

@@ -3,4 +3,5 @@ export type ItemInfo = {
   itemName: string;
   need: boolean;
   quantity?: number;
+  note?: string;
 };
