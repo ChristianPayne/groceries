@@ -148,6 +148,8 @@ export default function MyApp() {
             }
           />
         </div>
+      </div>
+      <div className="flex justify-between w-full lg:w-1/2">
         <Search />
       </div>
 
