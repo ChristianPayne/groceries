@@ -33,7 +33,7 @@ export default function Item({ item, updateItem, deleteItem }: Props) {
         size="100%"
         onClose={() => setOpened(false)}
         title="🥖"
-        className="w-full"
+        className="w-full lg:w-1/2 m-auto"
       >
         <div className="space-y-4">
           <TextInput
@@ -92,16 +92,16 @@ export default function Item({ item, updateItem, deleteItem }: Props) {
           </Button>
         </div>
       </Modal>
-      <div
-        className="bg-neutral-700 p-4 rounded-md w-full flex justify-between cursor-pointer hover:bg-cyan-700"
-        onClick={() => setOpened(true)}
-      >
-        <p className="w-full p-2">{item.itemName}</p>
+      <div className="bg-neutral-700 p-4 rounded-md w-full flex justify-between cursor-pointer hover:bg-cyan-700">
+        <p className="w-full p-2" onClick={() => setOpened(true)}>
+          {item.itemName}
+        </p>
         <Checkbox
           aria-label="Item Needed"
           color="cyan"
           checked={item.need}
           size="lg"
+          className="cursor-pointer"
           onChange={(event) => {
             setLastAction({
               type: 'check',

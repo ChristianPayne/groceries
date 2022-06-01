@@ -26,7 +26,7 @@ export default function App() {
         <Links />
       </head>
       <body className="bg-neutral-800 text-white p-4">
-        <NotificationsProvider>
+        <NotificationsProvider color="cyan">
           <Outlet />
         </NotificationsProvider>
         <ScrollRestoration />

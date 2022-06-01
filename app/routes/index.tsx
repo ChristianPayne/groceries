@@ -6,6 +6,7 @@ import { useAtom } from 'jotai';
 import {
   itemsAtom,
   lastActionAtom,
+  filteredItemsAtom,
   shoppingListAtom,
   shoppingListToggleAtom,
 } from '~/atoms';
@@ -24,6 +25,7 @@ import {
 import { initializeApp } from 'firebase/app';
 import AddItem from '~/components/AddItem';
 import { showNotification } from '@mantine/notifications';
+import Search from '~/components/Search';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDra5wmP5z3ijYTq5FP2jlz8V-SHrqA7VM',
@@ -47,6 +49,7 @@ export default function MyApp() {
   );
   const [addItemModal, setAddItemModal] = useState(false);
   const [lastAction, setLastAction] = useAtom(lastActionAtom);
+  const [filteredItems] = useAtom(filteredItemsAtom);
 
   useEffect(() => {
     const unsub = onSnapshot(groceriesRef, (doc) => {
@@ -57,7 +60,23 @@ export default function MyApp() {
   }, []);
 
   function getItems() {
-    return shoppingListToggle ? shoppingList : items;
+    return shoppingListToggle ? shoppingList : filteredItems;
+  }
+
+  function sortItems() {
+    let sortedItems = getItems().sort(function (a, b) {
+      if (a.itemName < b.itemName) {
+        return -1;
+      }
+      if (a.itemName > b.itemName) {
+        return 1;
+      }
+      return 0;
+    });
+    console.log('Sorting?');
+
+    setItems(sortedItems);
+    updateDoc(groceriesRef, { items: sortedItems });
   }
 
   function undoAction() {
@@ -112,18 +131,24 @@ export default function MyApp() {
     <div className="flex flex-col w-full items-center">
       <div className="text-4xl mb-4">Groceries</div>
 
-      <div className="flex">
-        <p>Shopping List</p>
-        <Switch
-          aria-label="Shopping List Toggle"
-          size="md"
-          color="cyan"
-          className="mb-4 ml-2"
-          checked={shoppingListToggle}
-          onChange={(event) =>
-            setShoppingListToggle(event.currentTarget.checked)
-          }
-        />
+      <div className="flex justify-between w-full lg:w-1/2">
+        <Button className="p-2 cursor-pointer" onClick={() => sortItems()}>
+          Aa
+        </Button>
+        <div className="flex">
+          <p>Shopping List</p>
+          <Switch
+            aria-label="Shopping List Toggle"
+            size="md"
+            color="cyan"
+            className="mb-4 ml-2"
+            checked={shoppingListToggle}
+            onChange={(event) =>
+              setShoppingListToggle(event.currentTarget.checked)
+            }
+          />
+        </div>
+        <Search />
       </div>
 
       <div className="space-y-4 w-full lg:w-1/2">

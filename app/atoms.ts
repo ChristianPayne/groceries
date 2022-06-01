@@ -4,8 +4,18 @@ import { ItemInfo, UndoAction } from './types';
 
 export const itemsAtom = atomWithStorage<Array<ItemInfo>>('items', []);
 
+export const filterAtom = atom('');
+
+export const filteredItemsAtom = atom<Array<ItemInfo>>((get) =>
+  get(filterAtom)
+    ? get(itemsAtom).filter((item) =>
+        item.itemName.toLowerCase().includes(get(filterAtom).toLowerCase())
+      )
+    : get(itemsAtom)
+);
+
 export const shoppingListAtom = atom((get) =>
-  get(itemsAtom).filter((item) => item.need)
+  get(filteredItemsAtom).filter((item) => item.need)
 );
 
 export const shoppingListToggleAtom = atomWithStorage(
