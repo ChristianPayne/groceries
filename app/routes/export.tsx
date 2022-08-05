@@ -3,15 +3,12 @@ import { ActionFunction, json } from '@remix-run/node';
 import { Form, useActionData } from '@remix-run/react';
 import { parseCSV } from '~/utils/importFromCSV.server';
 import {
-  addDoc,
   collection,
-  deleteDoc,
   doc,
   getDoc,
   getDocs,
   getFirestore,
   onSnapshot,
-  setDoc,
   updateDoc,
 } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
@@ -34,59 +31,28 @@ const groceriesRef = doc(db, 'groceries/items');
 
 export const action: ActionFunction = async () => {
   try {
-    // Get all data
     let newItems = (await (await getDoc(groceriesRef)).data())
       ?.items as ItemInfo[];
-    newItems.forEach(async (item) => {
-      addItem(item)
-    });
 
-
-    // const querySnapshot = await getDocs(collection(db, 'lists'));
-    // querySnapshot.forEach(async (doc) => {
-    //   // doc.data() is never undefined for query doc snapshots
-    //   console.log(doc.id, " => ", doc.data());
-    //   await deleteItem(doc.data())
-    // });
-
-
-    async function deleteItem(item: ItemInfo) {
-      return deleteDoc(doc(db, `lists/${item.id}`))
-    }
-
-    async function addItem(item: ItemInfo) {
-      // Add to data
-      let newItem = {
-        id: item.id,
-        itemName: item.itemName,
-        need: false,
-        quantity: item.quantity,
-        ...(item.note && { note: item.note })
-      };
-
-      console.log('Making new item', newItem)
-
-      // Push data
-      let docRef = doc(db, `lists/${newItem.id}`)
-      await setDoc(docRef, { ...newItem, list: 'christian-1' });
-    }
-
-
-
-    return json('Imported');
+    // Push data
+    // await updateDoc(groceriesRef, { items: newItems });
+    return json(newItems);
   } catch (e) {
     console.error(e);
     return json(e);
   }
 };
 
-export default function Import() {
+export default function Export() {
   let actionData = useActionData();
   return (
     <>
       <Form method="post">
-        <Button type="submit">Run import</Button>
+        <Button type="submit">Export Data</Button>
       </Form>
+      <p className='text-white'>
+        {`${JSON.stringify(actionData, null, 2)}`}
+      </p>
     </>
   );
 }
