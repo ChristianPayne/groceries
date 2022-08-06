@@ -26,6 +26,9 @@ import { initializeApp } from 'firebase/app';
 import AddItem from '~/components/AddItem';
 import { showNotification } from '@mantine/notifications';
 import Search from '~/components/Search';
+import algoliasearch from 'algoliasearch/lite';
+import { Hits, InfiniteHits, InstantSearch, SearchBox, useInstantSearch } from 'react-instantsearch-hooks-web';
+
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDra5wmP5z3ijYTq5FP2jlz8V-SHrqA7VM',
@@ -51,12 +54,24 @@ export default function MyApp() {
   const [lastAction, setLastAction] = useAtom(lastActionAtom);
   const [filteredItems] = useAtom(filteredItemsAtom);
 
+  const {
+    // indexUiState,
+    // setIndexUiState,
+    // uiState,
+    // setUiState,
+    results,
+    // scopedResults
+    // refresh,
+    // use,
+  } = useInstantSearch()
+
+
   useEffect(() => {
-    const unsub = onSnapshot(groceriesRef, (doc) => {
-      // console.log('Current data: ', doc.data());
-      setItems(doc.data()?.items ?? []);
-    });
-    return unsub;
+    // const unsub = onSnapshot(groceriesRef, (doc) => {
+    //   // console.log('Current data: ', doc.data());
+    //   setItems(doc.data()?.items ?? []);
+    // });
+    // return unsub;
   }, []);
 
   function getItems() {
@@ -154,7 +169,7 @@ export default function MyApp() {
       </div>
 
       <div className="space-y-4 w-full lg:w-1/2">
-        {getItems().map((item, i) => (
+        {results.hits.map((item, i) => (
           <Item
             key={i}
             item={item}

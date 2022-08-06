@@ -8,6 +8,8 @@ import {
   Scripts,
   ScrollRestoration,
 } from '@remix-run/react';
+import algoliasearch from 'algoliasearch';
+import { InstantSearch, InstantSearchSSRProvider } from 'react-instantsearch-hooks-web';
 import styles from './tailwind.css';
 
 export const meta: MetaFunction = () => ({
@@ -17,6 +19,7 @@ export const meta: MetaFunction = () => ({
 });
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: styles }];
+const searchClient = algoliasearch('EVWHUW5CNY', 'd204eab05532d2b011a51e29a73cb692');
 
 export default function App() {
   return (
@@ -27,7 +30,11 @@ export default function App() {
       </head>
       <body className="bg-neutral-800 text-white p-4">
         <NotificationsProvider color="cyan">
-          <Outlet />
+          <InstantSearchSSRProvider>
+            <InstantSearch searchClient={searchClient} indexName="groceries">
+              <Outlet />
+            </InstantSearch>
+          </InstantSearchSSRProvider>
         </NotificationsProvider>
         <ScrollRestoration />
         <Scripts />
